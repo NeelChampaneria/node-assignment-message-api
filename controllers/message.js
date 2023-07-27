@@ -12,7 +12,7 @@ exports.postNewMessage = async (req, res, next) => {
     if (!validationError) {
       res.status(400).json(validationError);
     } else {
-      const currentUser = jwt.decode(req.get("auth"));
+      const currentUser = jwt.decode(req.get("Authorization"));
       const { receiverId, content } = req.body;
       const message = await Message.create({
         senderId: currentUser.id,
@@ -28,7 +28,6 @@ exports.postNewMessage = async (req, res, next) => {
       });
     }
   } catch (err) {
-    console.log(err);
     res.status(500).json({
       message: "Something went wrong",
       err: err,
@@ -43,7 +42,7 @@ exports.putEditMessage = async (req, res, next) => {
     if (!validationError.isEmpty()) {
       res.status(400).json(validationError);
     } else {
-      const currentUser = jwt.decode(req.get("auth"));
+      const currentUser = jwt.decode(req.get("Authorization"));
       const messageId = req.params.messageId;
       const { content } = req.body;
 
@@ -65,7 +64,6 @@ exports.putEditMessage = async (req, res, next) => {
       }
     }
   } catch (err) {
-    console.log(err);
     res.status(500).json({
       message: "Something went wrong",
       err: err,
@@ -79,7 +77,7 @@ exports.deleteMessage = async (req, res, next) => {
     if (!validationError.isEmpty) {
       res.status(400).json(validationError);
     } else {
-      const currentUser = jwt.decode(req.get("auth"));
+      const currentUser = jwt.decode(req.get("Authorization"));
       const messageId = req.params.messageId;
 
       const message = await Message.findByPk(messageId);
@@ -99,7 +97,6 @@ exports.deleteMessage = async (req, res, next) => {
       }
     }
   } catch (err) {
-    console.log(err);
     res.status(500).json({
       message: "Something went wrong",
       err: err,
@@ -114,7 +111,7 @@ exports.getMessageHistory = async (req, res, next) => {
     if (!validationError.isEmpty()) {
       res.status(400).json(validationError);
     } else {
-      const currentUser = jwt.decode(req.get("auth"));
+      const currentUser = jwt.decode(req.get("Authorization"));
       const { userId, before, count, sort } = req.body;
 
       const messages = await Message.findAll({

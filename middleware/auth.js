@@ -2,7 +2,7 @@ const { verify } = require("jsonwebtoken");
 
 exports.authenticatedUser = async (req, res, next) => {
   try {
-    const accessToken = req.get("auth");
+    const accessToken = req.get("Authorization");
 
     if (!accessToken) {
       res.status(401).json({ message: "Unauthorized Access" });

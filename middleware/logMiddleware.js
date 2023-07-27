@@ -4,7 +4,7 @@ const LogMessage = require("../models/LogMessage");
 exports.logger = async (req, res, next) => {
   try {
     let message = "";
-    const token = req.get("auth");
+    const token = req.get("Authorization");
 
     message = message.concat(`IP Address: '${req.socket.remoteAddress}' | `);
 
@@ -20,8 +20,6 @@ exports.logger = async (req, res, next) => {
     message = message.concat(`Request Path: '${req.originalUrl}' | `);
     message = message.concat(`Request Method: '${req.method}' | `);
     message = message.concat(`Request Body: '${JSON.stringify(req.body)}' | `);
-
-    console.log("message: ", message);
 
     await LogMessage.create({ message: message });
 
