@@ -54,7 +54,7 @@ exports.postLogin = async (req, res, next) => {
       const user = await User.findOne({ where: { email: email } });
 
       if (!user) {
-        res.status(400).json({ message: "User doesn't exist" });
+        res.status(401).json({ message: "User doesn't exist" });
       } else {
         const dbPassword = user.password;
 

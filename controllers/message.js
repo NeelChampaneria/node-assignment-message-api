@@ -9,7 +9,7 @@ exports.postNewMessage = async (req, res, next) => {
   try {
     const validationError = validationResult(req);
 
-    if (!validationError) {
+    if (!validationError.isEmpty()) {
       res.status(400).json(validationError);
     } else {
       const currentUser = jwt.decode(req.get("Authorization"));
@@ -104,7 +104,7 @@ exports.deleteMessage = async (req, res, next) => {
   }
 };
 
-exports.getMessageHistory = async (req, res, next) => {
+exports.messageHistory = async (req, res, next) => {
   try {
     const validationError = validationResult(req);
 
@@ -116,8 +116,8 @@ exports.getMessageHistory = async (req, res, next) => {
 
       const messages = await Message.findAll({
         where: {
-          senderId: { [Op.eq]: currentUser.id },
-          receiverId: { [Op.eq]: userId },
+          senderId: { [Op.in]: [currentUser.id, userId] },
+          receiverId: { [Op.in]: [userId, currentUser.id] },
           createdAt: {
             [Op.lt]: before ? before : Date.now(),
             // "2023-07-27 14:48:00.000 +00:00",

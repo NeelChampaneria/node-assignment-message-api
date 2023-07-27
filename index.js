@@ -5,6 +5,9 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const { Client } = require("pg");
 
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+
 const { sq, testDbConnection } = require("./config/db");
 const User = require("./models/User");
 const Message = require("./models/Message");
@@ -16,7 +19,43 @@ const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
 const messageRoutes = require("./routes/message");
 
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "User-Message API",
+      version: "1.0.0",
+      description: "",
+    },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "apiKey",
+          in: "header",
+          name: "Authorization",
+          description: "Enter the token you received in the login response",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    servers: [
+      {
+        url: `http://localhost:${process.env.nodePort}`,
+      },
+    ],
+  },
+  apis: ["./routes/*.js"],
+};
+
+const specs = swaggerJsDoc(options);
+
 const app = express();
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 app.use(cors());
 
@@ -86,7 +125,7 @@ async function initialize() {
       })
         .then(() => {
           console.log("synced");
-          app.listen(3000);
+          app.listen(process.env.nodePort);
         })
         .catch((e) => {
           console.log("error in sync: ", e);
