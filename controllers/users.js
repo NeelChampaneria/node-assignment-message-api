@@ -15,7 +15,7 @@ exports.getUsersList = async (req, res, next) => {
       },
     });
 
-    res.status(200).json({ users });
+    res.status(200).send(users);
   } catch (err) {
     res.status(500).json({
       message: "Something went wrong",

@@ -38,7 +38,7 @@ const router = express.Router();
  *      200:
  *        description: List
  *        content:
- *            applicationn/json:
+ *            application/json:
  *              schema:
  *                type: array
  *                items:
