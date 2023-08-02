@@ -1,4 +1,4 @@
-const { decode } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const LogMessage = require("../models/LogMessage");
 
 exports.logger = async (req, res, next) => {

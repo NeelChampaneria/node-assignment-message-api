@@ -1,4 +1,4 @@
-const { verify } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 exports.authenticatedUser = async (req, res, next) => {
   try {
@@ -7,7 +7,10 @@ exports.authenticatedUser = async (req, res, next) => {
     if (!accessToken) {
       res.status(401).json({ message: "Unauthorized Access" });
     } else {
-      const validateToken = verify(accessToken, "Who_I'd_be_if_I_was_happy?");
+      const validateToken = jwt.verify(
+        accessToken,
+        "Who_I'd_be_if_I_was_happy?"
+      );
 
       if (validateToken) {
         return next();

@@ -18,10 +18,11 @@ const logMiddleware = require("./middleware/logMiddleware");
 const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
 const messageRoutes = require("./routes/message");
+const logRoutes = require("./routes/log");
 
 const options = {
   definition: {
-    openapi: "3.0.0",
+    openapi: "3.0.1",
     info: {
       title: "User-Message API",
       version: "1.0.0",
@@ -34,6 +35,8 @@ const options = {
           in: "header",
           name: "Authorization",
           description: "Enter the token you received in the login response",
+          scheme: "bearer",
+          bearerFormat: "JWT",
         },
       },
     },
@@ -65,15 +68,15 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-app.use(logMiddleware.logger);
-
 app.get("/", function (req, res) {
   res.send("Hello World");
 });
 
+app.use("/api", logMiddleware.logger);
 app.use("/api", authRoutes);
 app.use("/api", usersRoutes);
 app.use("/api", messageRoutes);
+app.use("/api", logRoutes);
 
 User.hasMany(Message, {
   foreignKey: {
